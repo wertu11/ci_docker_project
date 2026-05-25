@@ -1,12 +1,15 @@
-import pytest
-from ..app import app
+from flask import Flask, jsonify
 
-@pytest.fixture
-def client():
-    with app.test_client() as client:
-        yield client
+app = Flask(__name__)
 
-def test_home(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    assert response.data == b'Hello, Docker CI/CD!'
+@app.route('/')
+def home():
+    return 'Hello, Docker CI/CD!'
+
+@app.route('/health')
+def health():
+    return jsonify(status='ok')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
